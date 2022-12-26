@@ -1,0 +1,3 @@
+*.txt
+sql/
+__pycache__

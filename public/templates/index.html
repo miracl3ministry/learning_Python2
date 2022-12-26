@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Email spam filter ✨✨✨</title>
+        <link rel="stylesheet" href="static/style.css" />
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"
+            integrity="sha512-1/RvZTcCDEUjY/CypiMz+iqqtaoQfAITmNSJY17Myp4Ms5mdxPS5UV7iOfdZoxcGhzFbOm6sntTKJppjvuhg4g=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        ></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css"
+            integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row bg-info-subtle my-3">
+                <div class="col-6">
+                    <div class="accordion" id="accordionExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Выгрузить письма</button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <form action="get_files" method="POST" class="mb-3" enctype="multipart/form-data">
+                                        <label for="formFile" class="form-label">Загрузка файлов eml</label>
+                                        <input class="form-control mb-3" type="file" name="file" id="formEmlFile" multiple accept=".eml"/>
+                                        <button type="submit" class="btn btn-primary mb-3">Получить письма из файлов</button>
+                                    </form>
+                                    <form action="get_mail" method="POST">
+                                        <span class="col-auto mb-3">Загрузить из почты</span>
+                                        <select class="form-select col-auto mb-3" name="providerList">
+                                            <option value="yandex.ru" selected>yandex.ru</option>
+                                            <option value="google.com">google.com</option>
+                                        </select>
+                                        <div class="col-auto mb-3">
+                                            <label for="inputEmail" class="visually-hidden">Email</label>
+                                            <input type="email" class="form-control" id="inputEmail" placeholder="Email" name="username" value="{{ mail_address }}" />
+                                        </div>
+                                        <div class="col-auto mb-3">
+                                            <label for="inputPassword" class="visually-hidden">Password</label>
+                                            <input type="password" class="form-control" id="inputPassword" placeholder="Password" name="userpw" value="{{ mail_pass }}" />
+                                        </div>
+                                        <div class="col-auto mb-3">
+                                            <button type="submit" class="btn btn-primary mb-3">Выгрузить письма</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="m-2">
+                        <p>Список писем</p>
+                        <ol>
+                            <form name="inboxBoxForm" action="selectmsg" method="post">
+                                {% for message in data.inbox %}
+                                <li>
+                                    <input class="alert alert-dark" role="alert" name="messsageListItem" type="submit" id="{{message['header']['header']['message-id']}}" value="{{ message['header']['subject'] }}" />
+                                </li>
+                                {% endfor %}
+                            </form>
+                        </ol>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="m-2">
+                        <div class="">
+                            {% for msgItem in data.selectedMessageF %}
+                            <div class="">
+                                <p>Получено: {{ msgItem['header']['date'] }}</p>
+                                <p>От: {{ msgItem['header']['from'] }}</p>
+                                <p>Домены: {{ msgItem['header']['received_domain'] }}</p>
+                                <p>Цепочка IP: {{ msgItem['header']['received_ip'][:-1] }}</p>
+                            </div>
+                            {% endfor %}
+                            <hr />
+                            {{ data.selectedMessageSubjectF }}
+                        </div>
+                        <h2>Текст письма</h2>
+                        <div class="">{{ data.selectedMessageHTML|safe }}</div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+        </div>
+    </body>
+</html>
