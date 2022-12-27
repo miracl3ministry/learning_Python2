@@ -47,39 +47,40 @@ def parseTextFromMail(mail, recursion=False, charset="utf-8"):
     # парсит текст, хтмл и названия файлов
     cp = mail.get_content_type()
     print("==== На вход парсера получен файл ==== \n Рекурсия:", recursion, 'Кодировка:', charset, 'content type:', cp)
+    print('Is multipart?', mail.get_content_maintype() == 'multipart', mail.is_multipart())
     if not mail.is_multipart() or recursion:
-        print('is_multipart?', mail.get_content_maintype() == 'multipart')
         for part in mail.walk():
-            print('\t\t', part.get_content_type())
-            # TODO вместо return попробовать сохранить всё в массив и посмотреть
+            print('\t 1. part content type:', part.get_content_type())
+            # TODO вместо return попробовать сохранить всё в массив и посмотреть что там
+            # и вообще всё переработать, пересмотреть и переделать
             if cp == "text/plain":
                 try:
                     return letter_type(part)
                 except UnicodeDecodeError:
-                    if (type(part) is str): return part.encode("utf-8", errors='replace')
+                    print("except error")
+                    if (type(part) is str): return part.decode("utf-8", errors='replace')
                     else: return part.get_payload(decode=True).decode("utf-8")
             elif cp == "text/html": 
                 try:
                     return letter_type(mail)
                 except UnicodeDecodeError:
-                    return base64.b64decode(part.get_payload(decode=True))
+                    print("except error")
+                    return base64.b64decode(part.get_payload(decode=True)).decode("utf-8")
             elif part.get_content_disposition() == 'attachment':
-                print("Aаааа не знаю как обработать этот файл: ", part.get_filename())
+                print("В письме есть нобработанный файл:", part.get_filename(), "乁[ ◕ ᴥ ◕ ]ㄏ")
                 return part.get_filename()
             else:
                 # на случай если когда-то попадет сюда https://stackoverflow.com/questions/31392361/how-to-read-eml-file-in-python
-                print("idk how to fix")
-                print(mail.get("content-type"), part.get("content-type"), part.get_filename())
+                print("idk how to fix", mail.get("content-type"), part.get("content-type"), part.get_filename())
                 return part.get("content-type")
     else:
         # если письмо состоит их нескольких частей попадаем в эту ветку
         # далее происходит какая-то магия 
-        print('is_multipart?', mail.get_content_maintype() == 'multipart')
         parts = []
         for part in mail.walk():
-            print(part.get_content_type())
-            print('content-type', part.get_all('content-type'))
+            print('\t 2. part content type:', part.get_content_type())
             content_type = part.get_all('content-type')[0]
+            print('content-type', part.get_all('content-type'), content_type)
             index = content_type.find('charset')
             charset = "utf-8"
             if (index > 0): 
@@ -88,16 +89,13 @@ def parseTextFromMail(mail, recursion=False, charset="utf-8"):
                 else: charset = charset[1]
             print('charset', charset)
             # print('date', part.get_all('date'))
-            if (cp is 'multipart/alternative'): 
+            if (cp == 'multipart/alternative'): 
                 print('boundary', part.get_all('boundary'))
                 continue
-            # рабочий вариант 1
+            # рабочие варианты получения текста
             # parts.append(part.as_string())
-            # рабочий вариант 2
             # parts.append(letter_type(part))
-            # рабочий вариант 3
             # parts.append(part.get_payload(decode=True))
-            # рабочий вариант 4
             parts.append(parseTextFromMail(part, True, charset))
             parts.append("<hr>")
         return parts

@@ -1,3 +1,4 @@
 *.txt
 sql/
+UploadFiles/
 __pycache__

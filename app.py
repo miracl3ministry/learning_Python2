@@ -27,6 +27,7 @@ def returnIndexPage():
 # выбирает письмо и что-то дальше делает
 def selectMessage():
     data = controller.selectmsg(flask.request.form['messsageListItem'])
+    if hasattr(data, 'error'): print("/selectmsg error", data) # render template error.html
     return flask.render_template('index.html', data=data)
 
 @app.route('/get_files', methods=['POST'])
