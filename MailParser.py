@@ -67,7 +67,7 @@ def parseTextFromMail(mail, recursion=False, charset="utf-8"):
                     print("except error")
                     return base64.b64decode(part.get_payload(decode=True)).decode("utf-8")
             elif part.get_content_disposition() == 'attachment':
-                print("В письме есть небработанный файл:", part.get_filename(), "乁[ ◕ ᴥ ◕ ]ㄏ")
+                print("В письме есть необработанный файл:", part.get_filename(), "乁[ ◕ ᴥ ◕ ]ㄏ")
                 return part.get_filename()
             else:
                 # на случай если когда-то попадет сюда https://stackoverflow.com/questions/31392361/how-to-read-eml-file-in-python
