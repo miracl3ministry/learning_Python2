@@ -1,3 +1,7 @@
 body {
     background-color: #fff !important;
 }
+#info {
+    color: red;
+    display: none;
+}

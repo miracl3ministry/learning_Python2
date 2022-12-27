@@ -85,6 +85,10 @@ def get_mail(mail_address, mail_pass, mail_domain):
     }
     return data
 
+def checkForSpam():
+    print('pass')
+    pass
+
 # дальше идут функции модуля
 
 def get_eml_files(folder_path):

@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Email spam filter ✨✨✨</title>
         <link rel="stylesheet" href="static/style.css" />
+        <script src="static/index.js"></script>
         <script
             src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"
             integrity="sha512-1/RvZTcCDEUjY/CypiMz+iqqtaoQfAITmNSJY17Myp4Ms5mdxPS5UV7iOfdZoxcGhzFbOm6sntTKJppjvuhg4g=="
@@ -33,7 +34,7 @@
                                 <div class="accordion-body">
                                     <form action="get_files" method="POST" class="mb-3" enctype="multipart/form-data">
                                         <label for="formFile" class="form-label">Загрузка файлов eml</label>
-                                        <input class="form-control mb-3" type="file" name="file" id="formEmlFile" multiple accept=".eml"/>
+                                        <input class="form-control mb-3" type="file" name="file" id="formEmlFile" multiple accept=".eml" />
                                         <button type="submit" class="btn btn-primary mb-3">Получить письма из файлов</button>
                                     </form>
                                     <form action="get_mail" method="POST">
@@ -60,6 +61,8 @@
                     </div>
                     <div class="m-2">
                         <p>Список писем</p>
+                        <button type="submit" class="btn btn-primary mb-3" id="btn-check-spam">Пройтись спам фильтром</button>
+                        <span id="info"></span>
                         <ol>
                             <form name="inboxBoxForm" action="selectmsg" method="post">
                                 {% for message in data.inbox %}

@@ -50,20 +50,21 @@ def parseTextFromMail(mail, recursion=False, charset="utf-8"):
     if not mail.is_multipart() or recursion:
         print('is_multipart?', mail.get_content_maintype() == 'multipart')
         for part in mail.walk():
+            print('\t\t', part.get_content_type())
+            # TODO вместо return попробовать сохранить всё в массив и посмотреть
             if cp == "text/plain":
                 try:
                     return letter_type(part)
                 except UnicodeDecodeError:
-                    return part.get_payload(decode=True).decode("utf-8")
+                    if (type(part) is str): return part.encode("utf-8", errors='replace')
+                    else: return part.get_payload(decode=True).decode("utf-8")
             elif cp == "text/html": 
                 try:
                     return letter_type(mail)
                 except UnicodeDecodeError:
                     return base64.b64decode(part.get_payload(decode=True))
             elif part.get_content_disposition() == 'attachment':
-                # хз как это обработать
-                print("AAAAAAAAAA")
-                print(part.get_filename())
+                print("Aаааа не знаю как обработать этот файл: ", part.get_filename())
                 return part.get_filename()
             else:
                 # на случай если когда-то попадет сюда https://stackoverflow.com/questions/31392361/how-to-read-eml-file-in-python

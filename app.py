@@ -1,4 +1,5 @@
 import os
+import json
 import flask
 import controller
 
@@ -49,6 +50,16 @@ def getFilesByPost():
 def getMail():
     data = controller.get_mail(flask.request.form['username'], flask.request.form['userpw'], flask.request.form['providerList'])
     return flask.render_template('index.html', data=data)
+
+@app.route('/checkforspam', methods=['POST'])
+def shalom():
+    msg = controller.checkForSpam()
+    data = {
+        'status': 'OK',
+        'message': msg,
+    }
+    print(json.dumps(data), type(json.dumps(data)))
+    return json.dumps(data)
 
 def allowed_file(filename):
     # проверяет формат файла, пропускает только .eml
