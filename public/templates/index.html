@@ -65,9 +65,9 @@
                         <span id="info"></span>
                         <ol>
                             <form name="inboxBoxForm" action="selectmsg" method="post">
-                                {% for message in data.inbox %}
+                                {% for email in data.inbox %}
                                 <li>
-                                    <input class="alert alert-dark" role="alert" name="messsageListItem" type="submit" id="{{message['header']['header']['message-id']}}" value="{{ message['header']['subject'] }}" />
+                                    <input class="alert alert-dark" role="alert" name="messsageListItem" type="submit" id="{{ email['headers']['Message-Id'] }}" value="{{ email.subject }}" />
                                 </li>
                                 {% endfor %}
                             </form>
@@ -87,20 +87,26 @@
                             </div>
                         </div>
                         <div class="">
-                            {% for mailHeaders in data.selectedMessageHeaders %}
                             <div class="">
-                                <p>Получено: {{ mailHeaders['header']['date'] }}</p>
-                                <p>От: {{ mailHeaders['header']['from'] }}</p>
-                                <p>Домены: {{ mailHeaders['header']['received_domain'] }}</p>
-                                <p>Цепочка IP: {{ mailHeaders['header']['received_ip'][:-1] }}</p>
+                                <p>Получено: {{ data.selectedMessageHeaders.Date }}</p>
+                                <p>От: {{ data.selectedMessageHeaders.From }}</p>
+                                <p>К: {{ data.selectedMessageHeaders.To }}</p>
+                                <p>Тема: {{ data.selectedMessageHeaders.Subject }}</p>
+                                <p>Received: {{ data.selectedMessageHeaders.Received }}</p>
                             </div>
-                            {% endfor %}
                             <hr />
-                            {{ data.selectedMessageSubjectF }}
                         </div>
                         <h2>Текст письма</h2>
-                        <div class="">{{ data.selectedMessageHTML|safe }}</div>
-                        <div class="d-none">{{ data.selectedMessageHTML }}</div>
+                        <div class="mb-3">{{ data.selectedMessageHTML|safe }}</div>
+                        <h3>Файлы письма</h3>
+                        <div class="">
+                            {% for attachment in data.selectedMessageAttachment %} {% if attachment.filename %}
+                            <p>
+                                <span>mimetype: {{ attachment.mimetype }}</span>
+                                <span>filename: {{ attachment.filename }}</span>
+                            </p>
+                            {% endif %} {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>

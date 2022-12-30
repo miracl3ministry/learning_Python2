@@ -41,9 +41,9 @@ def collectDataResponse():
     # собирает словарь данных для отправки ответа на фронт-энд
     data = {
         'inbox': model.messages,
-        'selectedMessageHTML': model.selectedMessageText,
-        'selectedMessageHeaders': model.selectedMessage,
-        'selectedMessageSubjectF': model.selectedMessageSubject,
+        'selectedMessageHTML': model.selectedMessageHTML,
+        'selectedMessageHeaders': model.selectedMessageHeaders,
+        'selectedMessageAttachment': model.selectedMessageAttachment,
     }
     return data
 
