@@ -76,13 +76,23 @@
                 </div>
                 <div class="col-6">
                     <div class="m-2">
+                        <div class="accordion" id="accordionHeaders">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">Заголовки письма</button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionHeaders">
+                                <div class="accordion-body">
+                                    <p>{{ data.selectedMessageHeaders|tojson|safe }}</p>
+                                </div>
+                            </div>
+                        </div>
                         <div class="">
-                            {% for msgItem in data.selectedMessageF %}
+                            {% for mailHeaders in data.selectedMessageHeaders %}
                             <div class="">
-                                <p>Получено: {{ msgItem['header']['date'] }}</p>
-                                <p>От: {{ msgItem['header']['from'] }}</p>
-                                <p>Домены: {{ msgItem['header']['received_domain'] }}</p>
-                                <p>Цепочка IP: {{ msgItem['header']['received_ip'][:-1] }}</p>
+                                <p>Получено: {{ mailHeaders['header']['date'] }}</p>
+                                <p>От: {{ mailHeaders['header']['from'] }}</p>
+                                <p>Домены: {{ mailHeaders['header']['received_domain'] }}</p>
+                                <p>Цепочка IP: {{ mailHeaders['header']['received_ip'][:-1] }}</p>
                             </div>
                             {% endfor %}
                             <hr />
@@ -90,6 +100,7 @@
                         </div>
                         <h2>Текст письма</h2>
                         <div class="">{{ data.selectedMessageHTML|safe }}</div>
+                        <div class="d-none">{{ data.selectedMessageHTML }}</div>
                     </div>
                 </div>
             </div>

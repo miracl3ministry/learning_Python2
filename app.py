@@ -13,10 +13,11 @@ app.config['UPLOAD_FOLDER'] = 'UploadFiles'
 # определяем routs и их логику
 
 # принимаемые параметры data для index.html: 
+# находятся в controller.py/collectDataResponse()
 # inbox = письма в формате массива как я понимаю
 # selectedMessageF = наверное выбранное письмо
-# selectedMessageSubjectF = тема письма
 # selectedMessageHTML = видимо текст в хтмл формате
+# selectedMessageSubjectF = тема письма
 
 @app.route('/', methods=['POST', 'GET'])
 def returnIndexPage():

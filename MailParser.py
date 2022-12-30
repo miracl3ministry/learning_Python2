@@ -3,6 +3,7 @@ import email
 import quopri
 import imaplib
 import base64
+import json
 from os import walk
 
 def getMailFromFile(files):
@@ -12,13 +13,12 @@ def getMailFromFile(files):
     for filePath in files:
         with open(filePath, 'rb') as f:
             mail = ep.decode_email_bytes(f.read())
-            # print(json.dumps(mail['header']['header']))
         with open(filePath, 'r') as f:
             mail['mailText'] = parseTextFromMail(email.message_from_file(f)) # .encode('utf-8').strip()
-        
-        for text in mail['mailText']:
-            if (type(text) is str): text = text.strip().replace('\\n','<br>').replace('\\t','    ')
 
+        if (type(mail['mailText']) is str): mail['mailText'] = mail['mailText'].strip().replace('\\n','<br>').replace('\\t','    ')
+        elif (type(mail['mailText']) is list): mail['mailText'] = '<hr>'.join(mail['mailText'])
+        else: mail['mailText'] = json.dumps(mail['mailText'], indent=4, sort_keys=True, default=str)
         parsedMessages.append(mail)
     return parsedMessages
 
